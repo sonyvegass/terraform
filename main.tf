@@ -28,3 +28,4 @@ provider "google-beta" {
   region  = "europe-west1"
   project = "innovorder-${terraform.workspace}"
 }
+
