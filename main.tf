@@ -1,30 +1,19 @@
-terraform {
-  required_version = ">= 1.0.0"
-
-  backend "gcs" {
-    bucket = "innovorder-terraform"
-    prefix = "infrastructure/google/static-websites-v2"
-  }
-
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 4.53.1"
-    }
-
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = "~> 4.53.1"
+resource "google_compute_network" "vpc_network" {
+  name = "terraform-network"
+  project = "innovorder-lab"
+}
+resource "google_compute_instance" "vm_instance" {
+  name         = "terraform-instance2"
+  machine_type = "f1-micro"
+  zone         = "us-central1-c"
+  project = "innovorder-lab"
+  boot_disk {
+    initialize_params {
+      image = "centos-cloud/centos-7"
     }
   }
-}
-
-provider "google" {
-  region  = "europe-west1"
-  project = "innovorder-${terraform.workspace}"
-}
-
-provider "google-beta" {
-  region  = "europe-west1"
-  project = "innovorder-${terraform.workspace}"
+  network_interface {
+    network = google_compute_network.vpc_network.name
+    access_config {}
+  }
 }
